@@ -1,0 +1,24 @@
+{
+  "name": "swords",
+  "version": "1.0.0",
+  "description": "",
+  "author": "mjlescano",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "matter-js": "~0.13.0"
+  },
+  "devDependencies": {
+    "eslint": "~4.1.1",
+    "eslint-config-democracyos": "~1.2.1",
+    "nwb": "0.18.x"
+  },
+  "scripts": {
+    "build": "nwb build-web-app",
+    "clean": "nwb clean-app",
+    "start": "nwb serve-web-app --reload"
+  },
+  "engines": {
+    "node": "8.x.x",
+    "npm": "5.x.x"
+  }
+}
