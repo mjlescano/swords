@@ -4,21 +4,35 @@
   "description": "",
   "author": "mjlescano",
   "license": "GPL-3.0",
+  "main": "index.js",
   "dependencies": {
-    "matter-js": "~0.13.0"
+    "@f/pick-as": "~2.0.0",
+    "colyseus": "~0.4.18",
+    "colyseus.js": "~0.6.0",
+    "deepPick": "~1.1.1",
+    "domator": "~2.0.0",
+    "dos-config": "~3.0.2",
+    "fast-deep-equal": "~1.0.0",
+    "frame-loop": "~1.2.1",
+    "lodash.pick": "~4.4.0",
+    "p2": "~0.7.1",
+    "redux": "~3.7.2",
+    "shortid": "~2.2.8"
   },
   "devDependencies": {
     "eslint": "~4.1.1",
     "eslint-config-democracyos": "~1.2.1",
+    "nodemon": "~1.11.0",
     "nwb": "0.18.x"
   },
   "scripts": {
     "build": "nwb build-web-app",
     "clean": "nwb clean-app",
-    "start": "nwb serve-web-app --reload"
+    "start": "nodemon .",
+    "dev": "nwb serve"
   },
   "engines": {
-    "node": "8.x.x",
-    "npm": "5.x.x"
+    "node": "8",
+    "npm": "5"
   }
 }
