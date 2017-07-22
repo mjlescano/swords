@@ -20,7 +20,7 @@
     "shortid": "~2.2.8"
   },
   "devDependencies": {
-    "eslint": "~4.1.1",
+    "eslint": "~3.19.0",
     "eslint-config-democracyos": "~1.2.1",
     "nodemon": "~1.11.0",
     "nwb": "0.18.x"

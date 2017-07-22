@@ -7,7 +7,7 @@ module.exports = class Player {
     this.world = world
     this.id = id
     this.name = ''
-    this.position = [300, 300]
+    this.position = [100, 100]
     this.rotation = 0
 
     this.body = new p2.Body({
@@ -28,7 +28,8 @@ module.exports = class Player {
   }
 
   update () {
-    this.position = this.body.position
+    this.position[0] = this.body.position[0]
+    this.position[1] = this.body.position[1]
   }
 
   setName (name) {
