@@ -1,5 +1,6 @@
 const initialState = {
-  players: {}
+  players: {},
+  bullets: {}
 }
 
 const reducers = {

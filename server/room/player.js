@@ -1,27 +1,19 @@
 const p2 = require('p2')
 const pick = require('lodash.pick')
 const shapes = require('../../common/shapes')
+const Bullet = require('./bullet')
 
-const PLAYER_SPEED = 4
-
-module.exports = class Player {
+class Player {
   constructor ({ id, world, clientWidth, clientHeight }) {
     this.actions = new Map()
     this.world = world
     this.id = id
     this.name = ''
     this.position = [clientWidth / 2, clientHeight / 2]
-    this.angle = 0
+    this.angle = -(Math.PI / 2)
+    this.lastShot = +new Date()
 
-    this.body = new p2.Body({
-      type: p2.Body.DYNAMIC,
-      mass: 1,
-      position: this.position,
-      angle: 0
-    })
-
-    this.body.addShape(this.render())
-    this.world.addBody(this.body)
+    this.render()
 
     this.world.on('postStep', () => {
       this.update()
@@ -29,9 +21,21 @@ module.exports = class Player {
   }
 
   render () {
-    return new p2.Convex({
+    this.body = new p2.Body({
+      type: p2.Body.DYNAMIC,
+      mass: 1,
+      position: this.position,
+      angle: this.angle
+    })
+
+    this.shape = new p2.Convex({
       vertices: shapes.player
     })
+
+    this.body.addShape(this.shape)
+    this.world.addBody(this.body)
+
+    this.update()
   }
 
   update () {
@@ -51,7 +55,6 @@ module.exports = class Player {
 
   toJSON () {
     return pick(this, [
-      'id',
       'name',
       'position',
       'angle'
@@ -70,9 +73,22 @@ module.exports = class Player {
     })
   }
 
+  shoot () {
+    const now = +new Date()
+    if (now - this.lastShot < Player.PLAYER_SHOOT_INTERVAL) return null
+    this.lastShot = now
+
+    return new Bullet({ player: this })
+  }
+
   setMovement (x = 0, y = 0) {
     this.actions.set('move', () => {
-      this.body.applyImpulse([PLAYER_SPEED * x, PLAYER_SPEED * y])
+      this.body.applyImpulse([Player.PLAYER_SPEED * x, Player.PLAYER_SPEED * y])
     })
   }
 }
+
+Player.PLAYER_SPEED = 4
+Player.PLAYER_SHOOT_INTERVAL = 100
+
+module.exports = Player

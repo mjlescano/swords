@@ -2,21 +2,29 @@ const { Room } = require('colyseus')
 const {
   SET_PLAYER_NAME,
   SET_PLAYER_ANGLE,
-  SET_PLAYER_MOVEMENT
+  SET_PLAYER_MOVEMENT,
+  PLAYER_SHOOT
 } = require('../../common/action-types')
 const State = require('./state')
 
 const reducers = {
   [SET_PLAYER_NAME]: (state, { id }, [name]) => {
-    state.players[id].setName(name)
+    const player = state.players.get(id)
+    player.setName(name)
   },
 
   [SET_PLAYER_ANGLE]: (state, { id }, [angle]) => {
-    state.players[id].setAngle(angle)
+    const player = state.players.get(id)
+    player.setAngle(angle)
   },
 
   [SET_PLAYER_MOVEMENT]: (state, { id }, [x, y]) => {
-    state.players[id].setMovement(x, y)
+    const player = state.players.get(id)
+    player.setMovement(x, y)
+  },
+
+  [PLAYER_SHOOT]: (state, { id }) => {
+    state.playerShoot({ id })
   }
 }
 

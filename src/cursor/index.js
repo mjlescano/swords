@@ -1,12 +1,12 @@
 import throttle from 'lodash.throttle'
 import mousePosition from 'mouse-position'
 import store, { getCurrentPlayer } from '../store'
-import { setAngle } from '../actions'
+import { setAngle, shoot } from '../actions'
 import world from '../world'
 
 const mouse = mousePosition(world.canvas)
 
-const updateAngle = throttle(() => {
+const handleAngleChange = throttle(() => {
   const currentPlayer = getCurrentPlayer(store.getState())
 
   if (!currentPlayer) return
@@ -14,11 +14,16 @@ const updateAngle = throttle(() => {
   const player = currentPlayer.position
   const cursor = [mouse[0], mouse[1]]
 
-  const angle = Math.atan2(cursor[1] - player[1], cursor[0] - player[0]) + Math.PI / 2
+  const angle = Math.atan2(cursor[1] - player[1], cursor[0] - player[0])
 
-  console.log(angle)
   setAngle(angle)
 }, 25)
 
-mouse.on('move', updateAngle)
-store.subscribe(updateAngle)
+mouse.once('move', () => {
+  mouse.on('move', handleAngleChange)
+  store.subscribe(handleAngleChange)
+})
+
+const handleShoot = throttle(shoot, 75)
+
+window.addEventListener('click', handleShoot, false)

@@ -1,6 +1,7 @@
 const loop = require('frame-loop')
 const p2 = require('p2')
 const pick = require('lodash.pick')
+const DumpableMap = require('../lib/dumpable-map')
 const Player = require('./player')
 
 module.exports = class State {
@@ -14,7 +15,8 @@ module.exports = class State {
     this.engine = loop(this.onTick)
 
     this.fps = 0
-    this.players = {}
+    this.players = new DumpableMap()
+    this.bullets = new DumpableMap()
 
     this.engine.on('fps', (fps) => { this.fps = fps })
   }
@@ -36,18 +38,32 @@ module.exports = class State {
       world: this.world
     }, attrs))
 
-    this.players[attrs.id] = player
+    this.players.set(attrs.id, player)
   }
 
   removePlayer ({ id }) {
-    this.players[id].remove()
-    delete this.players[id]
+    const player = this.players.get(id)
+    player.remove()
+    this.players.delete(id)
+  }
+
+  playerShoot ({ id }) {
+    const player = this.players.get(id)
+    const bullet = player.shoot()
+    if (!bullet) return
+
+    bullet.onRemove(() => {
+      this.bullets.delete(bullet.id)
+    })
+
+    this.bullets.set(bullet.id, bullet)
   }
 
   toJSON () {
     return pick(this, [
       'fps',
-      'players'
+      'players',
+      'bullets'
     ])
   }
 }
