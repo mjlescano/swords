@@ -10,11 +10,18 @@ class Player extends Entity {
 
     el.fill = '#333'
     el.noStroke()
+
+    this.update()
   }
 
   update () {
-    const [x, y] = this.state.position
+    const {
+      position: [x, y],
+      angle
+    } = this.state
+
     this.el.translation.set(x, y)
+    this.el.rotation = angle
   }
 
   remove () {

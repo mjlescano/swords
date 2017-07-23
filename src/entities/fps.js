@@ -8,7 +8,8 @@ const style = css({
   top: 0,
   padding: '5px',
   fontFamily: 'monospace',
-  fontSize: '11px'
+  fontSize: '11px',
+  userSelect: 'none'
 })
 
 class Fps extends Entity {

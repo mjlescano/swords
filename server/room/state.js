@@ -8,7 +8,7 @@ module.exports = class State {
     this.onTick = this.onTick.bind(this)
 
     this.world = new p2.World({
-      gravity: [0, 0.001]
+      gravity: [0, 0]
     })
 
     this.engine = loop(this.onTick)
@@ -31,16 +31,16 @@ module.exports = class State {
     this.world.step(delta)
   }
 
-  addPlayer ({ id }) {
-    const player = new Player({
-      id,
+  addPlayer (attrs) {
+    const player = new Player(Object.assign({
       world: this.world
-    })
+    }, attrs))
 
-    this.players[id] = player
+    this.players[attrs.id] = player
   }
 
   removePlayer ({ id }) {
+    this.players[id].remove()
     delete this.players[id]
   }
 

@@ -1,14 +1,17 @@
 import Colyseus from 'colyseus.js'
-import { UPDATE_NAME } from '../../common/action-types'
+import { setName } from '../actions'
 import store from '../store'
 
 const host = window.document.location.host.replace(/:.*/, '')
 const client = new Colyseus.Client(`ws://${host}:8080`)
-const room = client.join('default')
+const room = client.join('default', {
+  clientWidth: window.innerWidth,
+  clientHeight: window.innerHeight
+})
 
-room.send([UPDATE_NAME, 'tout.'])
+room.onJoin.addOnce(() => {
+  setName('tout.')
 
-room.onUpdate.addOnce(() => {
   store.dispatch({
     type: 'SET_CURRENT_PLAYER',
     payload: { currentPlayer: client.id }

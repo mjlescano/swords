@@ -1,10 +1,22 @@
 const { Room } = require('colyseus')
-const { UPDATE_NAME } = require('../../common/action-types')
+const {
+  SET_PLAYER_NAME,
+  SET_PLAYER_ANGLE,
+  SET_PLAYER_MOVEMENT
+} = require('../../common/action-types')
 const State = require('./state')
 
 const reducers = {
-  [UPDATE_NAME]: (state, { id }, [name]) => {
+  [SET_PLAYER_NAME]: (state, { id }, [name]) => {
     state.players[id].setName(name)
+  },
+
+  [SET_PLAYER_ANGLE]: (state, { id }, [angle]) => {
+    state.players[id].setAngle(angle)
+  },
+
+  [SET_PLAYER_MOVEMENT]: (state, { id }, [x, y]) => {
+    state.players[id].setMovement(x, y)
   }
 }
 
@@ -21,8 +33,12 @@ module.exports = class SwordsRoom extends Room {
     this.state.stop()
   }
 
-  onJoin (client) {
-    this.state.addPlayer(client)
+  onJoin ({ id }, { clientWidth, clientHeight }) {
+    this.state.addPlayer({
+      id,
+      clientWidth,
+      clientHeight
+    })
   }
 
   onLeave (client) {
