@@ -9,8 +9,10 @@ import {
 } from '../store/actions'
 import store from '../store'
 
-const host = window.document.location.host.replace(/:.*/, '')
-const client = new Colyseus.Client(`ws://${host}:8080`)
+const host = window.location.host
+const protocol = window.document.location.protocol === 'https:' ? 'wss' : 'ws'
+
+const client = new Colyseus.Client(`${protocol}://${host}`)
 const room = client.join('default')
 
 room.onJoin.addOnce(() => {
