@@ -1,7 +1,7 @@
 import p2 from 'p2'
+import { bindAll } from 'lodash'
 import throttle from '../../lib/throttle'
-import mixin, { bindAll } from '../../lib/mixin'
-import withProps from '../../lib/with-props'
+import createProps from '../../lib/create-props'
 import Bullet from './bullet'
 
 export const MOVE_SPEED = 10
@@ -16,7 +16,7 @@ export const SHAPE = [
 
 const props = {
   name: {
-    validate (val) {
+    validate (entity, val) {
       if (typeof val !== 'string') return false
       if (val.length > 16) return false
       return true
@@ -24,7 +24,7 @@ const props = {
   },
 
   focus: {
-    validate (val) {
+    validate (entity, val) {
       return typeof val !== 'boolean'
     }
   },
@@ -32,47 +32,45 @@ const props = {
   angle: {
     interval: ROTATE_INTERVAL,
 
-    validate (val) {
+    validate (entity, val) {
       if (typeof val !== 'number') return false
       if (val < -Math.PI || val > Math.PI) return false
       return true
     },
 
-    update (angle) {
-      this.body.angle = angle
+    update (entity, angle) {
+      entity.body.angle = angle
     },
 
-    toJSON () {
-      return { angle: this.body.angle }
+    toJSON (entity) {
+      return { angle: entity.body.angle }
     }
   },
 
   impulse: {
     interval: MOVE_INTERVAL,
 
-    validate (val) {
+    validate (entity, val) {
       if (!Array.isArray(val)) return false
       return val.every((v) => v === -1 || v === 0 || v === 1)
     },
 
-    update ([x, y]) {
-      this.body.applyImpulse([
+    update (entity, [x, y]) {
+      entity.body.applyImpulse([
         MOVE_SPEED * x,
         MOVE_SPEED * y
       ])
     },
 
-    toJSON () {
-      const [x, y] = this.body.position
+    toJSON (entity) {
+      const [x, y] = entity.body.position
       return { position: [x, y] }
     }
   }
 }
 
-export default class Player extends mixin(bindAll, withProps(props)) {
+export default class Player {
   constructor (options = {}) {
-    super()
-
     const {
       world = new p2.World(),
       name = 'Unknown',
@@ -86,23 +84,24 @@ export default class Player extends mixin(bindAll, withProps(props)) {
     }
 
     this.world = world
+    this.props = createProps(props)
+    this.toJSON = this.props.toJSON
 
     this.shoot = throttle(function () {
       return new Bullet({ player: this })
     }, SHOOT_INTERVAL)
 
-    this
-      .setProp({
-        name,
-        focus: true
-      })
-      .render()
+    this.props.set({ name, focus: true })
+    this.render()
 
     this.world.on('postStep', () => {
-      this.update()
+      this.props.update()
     })
 
-    return this
+    bindAll(this, [
+      'render',
+      'remove'
+    ])
   }
 
   render () {

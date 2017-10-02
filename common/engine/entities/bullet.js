@@ -1,7 +1,7 @@
 import p2 from 'p2'
 import shortid from 'shortid'
-import mixin, { bindAll } from '../../lib/mixin'
-import withProps from '../../lib/with-props'
+import { bindAll } from 'lodash'
+import createProps from '../../lib/create-props'
 
 export const BULLET_SPEED = 0.8
 export const BULLET_LIFESPAN = 750
@@ -11,31 +11,38 @@ const props = {
   position: {
     validate: () => false,
 
-    toJSON () {
-      const [x, y] = this.body.position
+    toJSON (entity) {
+      const [x, y] = entity.body.position
       return { position: [x, y] }
     }
   }
 }
 
-export default class Bullet extends mixin(bindAll, withProps(props)) {
+export default class Bullet {
   constructor ({ player }) {
-    super()
-
     this.id = shortid.generate()
     this.world = player.world
     this.player = player
     this.onRemoveCallbacks = []
 
+    this.props = createProps(props)
+    this.toJSON = this.props.toJSON
+
     this.render()
 
     this.world.on('postStep', () => {
-      this.update()
+      this.props.update()
     })
 
     setTimeout(() => {
       this.remove()
     }, BULLET_LIFESPAN)
+
+    bindAll(this, [
+      'render',
+      'remove',
+      'onRemove'
+    ])
   }
 
   render () {
