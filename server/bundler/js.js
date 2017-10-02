@@ -3,17 +3,23 @@ import browserify from 'browserify'
 import watchify from 'watchify'
 import babelify from 'babelify'
 
+const onDev = process.env.NODE_ENV !== 'production'
+
 export default function js (entry) {
   console.log(`· Bundling ${entry}`)
 
   let result
 
+  const plugin = []
+
+  if (onDev) plugin.push(watchify)
+
   const asset = browserify({
     debug: false,
     cache: {},
-    packageCache: {}
+    packageCache: {},
+    plugin
   })
-    .plugin(watchify)
     .transform(babelify)
     .require(entry, { entry: true })
     .on('update', bundle)
