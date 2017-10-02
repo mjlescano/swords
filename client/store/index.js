@@ -8,9 +8,3 @@ const devTools = (typeof window !== 'undefined' || undefined) &&
 const store = createStore(reducer, undefined, devTools)
 
 export default store
-
-export const getCurrentPlayer = (state) => {
-  if (!state.currentPlayer) return null
-  if (!state.room) return null
-  return state.room.players[state.currentPlayer]
-}

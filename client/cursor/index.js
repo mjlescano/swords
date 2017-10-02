@@ -1,17 +1,17 @@
 import throttle from 'lodash/throttle'
 import mousePosition from 'mouse-position'
-import store, { getCurrentPlayer } from '../store'
+import store from '../store'
 import { setAngle, shoot } from '../store/actions'
 
 const mouse = mousePosition()
 let lastAngle = null
 
 const handleAngleChange = throttle(() => {
-  const currentPlayer = getCurrentPlayer(store.getState())
+  const { me } = store.getState()
 
-  if (!currentPlayer) return
+  if (!me) return
 
-  const player = currentPlayer.position
+  const player = me.position
   const cursor = [mouse[0], mouse[1]]
 
   const angle = Math.atan2(cursor[1] - player[1], cursor[0] - player[0])

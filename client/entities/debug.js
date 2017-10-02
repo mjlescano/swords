@@ -16,7 +16,6 @@ const style = css({
 
 const valuesToDebug = {
   currentPlayer: 'id',
-  'me.focus': 'focus',
   'room.fps': 'fps'
 }
 

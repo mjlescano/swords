@@ -23,11 +23,13 @@ class Player extends Entity {
   update () {
     const {
       position: [x, y],
-      angle
+      angle,
+      focus
     } = this.state
 
     this.el.translation.set(x, y)
     this.el.rotation = angle
+    this.el.opacity = focus ? 1 : 0.5
   }
 
   remove () {
