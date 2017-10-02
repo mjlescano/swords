@@ -1,5 +1,7 @@
 {
   "watch": [
-    "server/"
+    "server",
+    "common",
+    "index.js"
   ]
 }

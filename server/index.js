@@ -1,14 +1,26 @@
-const path = require('path')
-const { createServer } = require('http')
-const { Server } = require('colyseus')
-const nodeStatic = require('node-static')
-const SwordsRoom = require('./room')
+import path from 'path'
+import { createServer } from 'http'
+import { Server } from 'colyseus'
+import { js, html } from './bundler'
+import SwordsRoom from './room'
 
-const staticServer = new nodeStatic.Server(path.resolve(__dirname, '..', 'dist'))
+const serveClient = js(path.resolve(__dirname, '..', 'client', 'index.js'))
+const serveLayout = html(path.resolve(__dirname, '..', 'client', 'index.html'))
 
-const httpServer = module.exports = createServer((req, res) => {
+const httpServer = createServer((req, res) => {
   req.addListener('end', function () {
-    staticServer.serve(req, res)
+    console.log(`${req.method} ${req.url}`)
+
+    if (req.method === 'GET' && req.url === '/index.js') {
+      return serveClient(req, res)
+    }
+
+    if (req.method === 'GET' && req.url === '/') {
+      return serveLayout(req, res)
+    }
+
+    res.writeHead(404)
+    res.end(req.method === 'GET' ? 'Not Found' : undefined)
   }).resume()
 })
 
@@ -17,3 +29,5 @@ const gameServer = new Server({
 })
 
 gameServer.register('default', SwordsRoom)
+
+export default httpServer

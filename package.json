@@ -7,6 +7,7 @@
   "main": "index.js",
   "dependencies": {
     "@f/pick-as": "~2.0.0",
+    "babel-register": "~6.26.0",
     "colyseus": "~0.4.18",
     "colyseus.js": "~0.6.0",
     "deepPick": "~1.1.1",
@@ -14,27 +15,27 @@
     "dos-config": "~3.0.2",
     "fast-deep-equal": "~1.0.0",
     "frame-loop": "~1.2.1",
-    "lodash.pick": "~4.4.0",
-    "lodash.throttle": "~4.1.1",
+    "lodash": "~4.17.4",
     "mouse-position": "~2.0.1",
     "mousetrap": "~1.6.1",
-    "node-static": "~0.7.9",
     "p2": "~0.7.1",
     "redux": "~3.7.2",
     "shortid": "~2.2.8",
     "throttle": "~1.0.3"
   },
   "devDependencies": {
+    "babel-preset-env": "~1.6.0",
+    "babelify": "~7.3.0",
+    "browserify": "~14.4.0",
+    "clipboardy": "~1.1.4",
     "eslint": "~3.19.0",
     "eslint-config-democracyos": "~1.2.1",
     "nodemon": "~1.11.0",
-    "nwb": "0.18.x"
+    "watchify": "~3.9.0"
   },
   "scripts": {
-    "build": "nwb build-web-app",
-    "clean": "nwb clean-app",
-    "start": "nodemon .",
-    "dev": "nwb serve"
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "engines": {
     "node": "8",
