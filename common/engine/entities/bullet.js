@@ -3,9 +3,9 @@ import shortid from 'shortid'
 import mixin, { bindAll } from '../../lib/mixin'
 import withProps from '../../lib/with-props'
 
-const BULLET_SPEED = 0.8
-const BULLET_LIFESPAN = 750
-const SHAPE = 2
+export const BULLET_SPEED = 0.8
+export const BULLET_LIFESPAN = 750
+export const SHAPE = 2
 
 const props = {
   position: {

@@ -1,7 +1,6 @@
+import { SHAPE, BULLET_LIFESPAN } from '../../common/engine/entities/bullet'
 import { Entity } from '../lib/entity'
 import withWorld from '../world/with-world'
-
-const SHAPE = 2
 
 class Bullet extends Entity {
   render () {
@@ -12,6 +11,10 @@ class Bullet extends Entity {
     el.noStroke()
 
     this.update()
+
+    setTimeout(() => {
+      el.opacity = 0
+    }, BULLET_LIFESPAN)
   }
 
   update () {

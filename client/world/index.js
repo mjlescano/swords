@@ -1,3 +1,4 @@
+import { throttle } from 'lodash'
 import Two from '../lib/two'
 import store from '../store'
 
@@ -11,8 +12,9 @@ const world = new Two({
   height
 }).appendTo(document.body)
 
-store.subscribe(() => {
-  world.render()
-})
+const render = throttle(() => world.render(), 25)
+
+store.subscribe(() => render.flush())
+setInterval(render, 25)
 
 export default world

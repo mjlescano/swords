@@ -4,11 +4,11 @@ import mixin, { bindAll } from '../../lib/mixin'
 import withProps from '../../lib/with-props'
 import Bullet from './bullet'
 
-const MOVE_SPEED = 10
-const MOVE_INTERVAL = 40
-const ROTATE_INTERVAL = 40
-const SHOOT_INTERVAL = 100
-const SHAPE = [
+export const MOVE_SPEED = 10
+export const MOVE_INTERVAL = 40
+export const ROTATE_INTERVAL = 40
+export const SHOOT_INTERVAL = 100
+export const SHAPE = [
   [22, 10],
   [0, 22],
   [0, 0]
