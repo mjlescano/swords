@@ -10,22 +10,34 @@ const style = css({
   padding: '5px',
   fontFamily: 'monospace',
   fontSize: '11px',
+  textAlign: 'right',
   userSelect: 'none'
 })
 
-class Fps extends Entity {
+const valuesToDebug = {
+  currentPlayer: 'id',
+  'me.focus': 'focus',
+  'room.fps': 'fps'
+}
+
+const stateValues = Object.values(valuesToDebug)
+
+class Debug extends Entity {
   init () {
     this.parent = document.body
   }
 
   render () {
-    const { fps } = this.state
-    const el = this.el = d(`.fps[style="${style}"] ${fps}`)
+    const el = this.el = d(`.fps[style="${style}"] ${this.getText()}`)
     this.parent.appendChild(el)
   }
 
+  getText () {
+    return stateValues.map((val) => this.state[val]).join('<br/>')
+  }
+
   update () {
-    this.el.innerHTML = this.state.fps || ''
+    this.el.innerHTML = this.getText()
   }
 
   remove () {
@@ -33,4 +45,4 @@ class Fps extends Entity {
   }
 }
 
-export default withStore(Fps, { 'room.fps': 'fps' })
+export default withStore(Debug, valuesToDebug)

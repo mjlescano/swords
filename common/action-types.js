@@ -1,4 +1,5 @@
 export const SET_NAME = 'SET_NAME'
 export const SET_ANGLE = 'SET_ANGLE'
 export const SET_IMPULSE = 'SET_IMPULSE'
+export const SET_FOCUS = 'SET_FOCUS'
 export const SHOOT = 'SHOOT'

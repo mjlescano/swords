@@ -2,6 +2,7 @@ import {
   SET_NAME,
   SET_ANGLE,
   SET_IMPULSE,
+  SET_FOCUS,
   SHOOT
 } from '../../../common/action-types'
 import room from '../../room'
@@ -17,6 +18,7 @@ export default (state = initialState, { type, payload }) => {
     case SET_NAME:
     case SET_ANGLE:
     case SET_IMPULSE:
+    case SET_FOCUS:
     case SHOOT:
       const data = payload || []
       room.send([type, ...data])

@@ -23,6 +23,12 @@ const props = {
     }
   },
 
+  focus: {
+    validate (val) {
+      return typeof val !== 'boolean'
+    }
+  },
+
   angle: {
     interval: ROTATE_INTERVAL,
 
@@ -86,7 +92,10 @@ export default class Player extends mixin(bindAll, withProps(props)) {
     }, SHOOT_INTERVAL)
 
     this
-      .setProp({ name })
+      .setProp({
+        name,
+        focus: true
+      })
       .render()
 
     this.world.on('postStep', () => {

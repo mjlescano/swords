@@ -1,6 +1,13 @@
 import Colyseus from 'colyseus.js'
-import { setName, setCurrentPlayer, updateRoom } from '../store/actions'
-import store from '../store'
+import focus from 'observ-focus'
+import {
+  setName,
+  setCurrentPlayer,
+  updateRoom,
+  setFocus,
+  setMe
+} from '../store/actions'
+import store, { getCurrentPlayer } from '../store'
 
 const host = window.document.location.host.replace(/:.*/, '')
 const client = new Colyseus.Client(`ws://${host}:8080`)
@@ -13,6 +20,19 @@ room.onJoin.addOnce(() => {
 
 room.onUpdate.add((state) => {
   store.dispatch(updateRoom(state))
+})
+
+let lastMe
+store.subscribe(() => {
+  const me = getCurrentPlayer(store.getState()) || null
+  const json = JSON.stringify(me)
+  if (lastMe === json) return
+  lastMe = json
+  store.dispatch(setMe(me))
+})
+
+focus((onFocus) => {
+  store.dispatch(setFocus(onFocus))
 })
 
 export default room
