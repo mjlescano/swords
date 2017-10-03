@@ -1,12 +1,12 @@
 import { Room } from 'colyseus'
-import Engine from '../../common/engine'
+import Game from '../../common/game'
 
 export default class SwordsRoom extends Room {
   constructor (options) {
     super(options)
 
     this.setPatchRate(16)
-    this.setState(new Engine())
+    this.setState(new Game())
     this.state.run()
   }
 

@@ -1,4 +1,4 @@
-import { SHAPE, BULLET_LIFESPAN } from '../../common/engine/entities/bullet'
+import { SHAPE, BULLET_LIFESPAN } from '../../common/game/entities/bullet'
 import { Entity } from '../lib/entity'
 import withWorld from '../world/with-world'
 

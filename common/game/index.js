@@ -5,7 +5,7 @@ import createCollection from '../lib/collection'
 import { actionTypes } from '../action-types'
 import reducers from './reducers'
 import Player from './entities/player'
-// import Bullet from './entities/bullet'
+import Bullet from './entities/bullet'
 
 Matter.Common.isElement = () => false
 
@@ -15,7 +15,7 @@ const toJSON = pick([
   'bullets'
 ])
 
-export default class Engine {
+export default class Game {
   constructor () {
     const world = Matter.World.create({
       label: 'World',
@@ -32,16 +32,24 @@ export default class Engine {
 
     const engine = Matter.Engine.create({ world })
 
+    this._nextId = 0
     this.engine = engine
+    this.world = world
     this.fps = 0
     this.players = createCollection(Player)
-    // this.bullets = createCollection(Bullet)
+    this.bullets = createCollection(Bullet)
 
     this.loop = loop((delta) => {
       Matter.Engine.update(engine, delta)
     })
 
     this.loop.on('fps', (fps) => { this.fps = fps })
+  }
+
+  nextId () {
+    this._nextId += 1
+    if (this._nextId === 1000000) this._nextId = 1
+    return this._nextId.toString(36)
   }
 
   run () {
@@ -62,7 +70,7 @@ export default class Engine {
 
   addPlayer (id) {
     this.players.create(id, {
-      engine: this.engine
+      game: this
     })
   }
 
@@ -71,16 +79,16 @@ export default class Engine {
   }
 
   playerShoot (id) {
-    // const player = this.players.get(id)
-    // const bullet = player.shoot()
+    const player = this.players.get(id)
+    const bullet = player.shoot()
 
-    // if (!bullet) return
+    if (!bullet) return
 
-    // bullet.onRemove(() => {
-    //   this.bullets.remove(bullet.id, false)
-    // })
+    bullet.onRemove(() => {
+      this.bullets.remove(bullet.id, false)
+    })
 
-    // this.bullets.set(bullet.id, bullet)
+    this.bullets.set(bullet.id, bullet)
   }
 
   toJSON () {

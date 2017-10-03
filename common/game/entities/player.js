@@ -1,14 +1,15 @@
 import Matter from 'matter-js'
 import { bindAll } from 'lodash'
-// import throttle from '../../lib/throttle'
+import throttle from '../../lib/throttle'
 import createProps from '../../lib/create-props'
-// import Bullet from './bullet'
+import Bullet from './bullet'
 
 export const MOVE_SPEED = 15
 export const MOVE_FRICTION = 0.4
 export const MOVE_INTERVAL = 40
 export const ROTATE_INTERVAL = 40
-export const SHOOT_INTERVAL = 100
+export const SHOOT_INTERVAL = 50
+export const MAX_BULLETS = 3
 export const SHAPE = [
   [22, 10],
   [0, 22],
@@ -75,7 +76,7 @@ const props = {
 export default class Player {
   constructor (options = {}) {
     const {
-      engine = null,
+      game = null,
       name = 'Unknown',
       angle = Math.PI,
       position = [0, 0]
@@ -86,18 +87,23 @@ export default class Player {
       position
     }
 
-    this.engine = engine
+    this.game = game
     this.props = createProps(this, props)
     this.toJSON = this.props.toJSON
 
-    // this.shoot = throttle(function () {
-    //   return new Bullet({ player: this })
-    // }, SHOOT_INTERVAL)
+    let bulletCount = 0
+    this.shoot = throttle(function () {
+      if (bulletCount >= MAX_BULLETS) return
+      bulletCount++
+      const bullet = new Bullet({ game, player: this })
+      bullet.onRemove(() => bulletCount--)
+      return bullet
+    }, SHOOT_INTERVAL)
 
     this.props.set({ name, focus: true })
     this.render()
 
-    Matter.Events.on(engine, 'afterUpdate', () => {
+    Matter.Events.on(game.engine, 'afterUpdate', () => {
       this.props.update()
     })
 
@@ -109,7 +115,7 @@ export default class Player {
 
   render () {
     const [x, y] = this.options.position
-    const { world } = this.engine
+    const { world } = this.game
 
     const body = this.body = Matter.Bodies.fromVertices(x, y, shapeVector, {
       frictionAir: MOVE_FRICTION
@@ -121,6 +127,6 @@ export default class Player {
   }
 
   remove () {
-    Matter.World.remove(this.engine.world, this.body)
+    Matter.World.remove(this.game.world, this.body)
   }
 }

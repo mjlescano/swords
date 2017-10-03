@@ -25,7 +25,6 @@
     "mousetrap": "~1.6.1",
     "observ-focus": "~1.0.0",
     "redux": "~3.7.2",
-    "shortid": "~2.2.8",
     "throttle": "~1.0.3",
     "watchify": "~3.9.0"
   },
