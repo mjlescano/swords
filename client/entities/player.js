@@ -12,9 +12,10 @@ const shape = shapeToAnchor(SHAPE)
 
 class Player extends Entity {
   render () {
+    const { color } = this.state
     const el = this.el = this.world.makePath(shape)
 
-    el.fill = '#333'
+    el.fill = color
     el.noStroke()
 
     this.update()

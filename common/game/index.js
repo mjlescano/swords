@@ -2,6 +2,8 @@ import loop from 'frame-loop'
 import Matter from 'matter-js'
 import pick from 'lodash/fp/pick'
 import createCollection from '../lib/collection'
+import generateIds from '../lib/generate-ids'
+import generateColors from '../lib/generate-colors'
 import { actionTypes } from '../action-types'
 import reducers from './reducers'
 import Player from './entities/player'
@@ -32,10 +34,11 @@ export default class Game {
 
     const engine = Matter.Engine.create({ world })
 
-    this._nextId = 0
     this.engine = engine
     this.world = world
     this.fps = 0
+    this.generateId = generateIds()
+    this.generateColor = generateColors()
     this.players = createCollection(Player)
     this.bullets = createCollection(Bullet)
 
@@ -44,12 +47,6 @@ export default class Game {
     })
 
     this.loop.on('fps', (fps) => { this.fps = fps })
-  }
-
-  nextId () {
-    this._nextId += 1
-    if (this._nextId === 1000000) this._nextId = 1
-    return this._nextId.toString(36)
   }
 
   run () {
@@ -70,7 +67,8 @@ export default class Game {
 
   addPlayer (id) {
     this.players.create(id, {
-      game: this
+      game: this,
+      color: this.generateColor()
     })
   }
 

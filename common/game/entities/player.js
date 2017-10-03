@@ -27,6 +27,10 @@ const props = {
     }
   },
 
+  color: {
+    validate: () => false
+  },
+
   focus: {
     validate (entity, val) {
       return typeof val !== 'boolean'
@@ -78,13 +82,15 @@ export default class Player {
     const {
       game = null,
       name = 'Unknown',
+      color = '#333',
       angle = Math.PI,
       position = [0, 0]
     } = options
 
     this.options = {
       angle,
-      position
+      position,
+      color
     }
 
     this.game = game
@@ -100,7 +106,7 @@ export default class Player {
       return bullet
     }, SHOOT_INTERVAL)
 
-    this.props.set({ name, focus: true })
+    this.props.set({ name, color, focus: true })
     this.render()
 
     Matter.Events.on(game.engine, 'afterUpdate', () => {
@@ -122,6 +128,8 @@ export default class Player {
     })
 
     Matter.World.add(world, body)
+
+    this.props.update()
 
     return this
   }

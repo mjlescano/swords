@@ -19,7 +19,7 @@ const props = {
 
 export default class Bullet {
   constructor ({ game, player }) {
-    this.id = game.nextId()
+    this.id = game.generateId()
     this.game = game
     this.player = player
     this.onRemoveCallbacks = []
@@ -65,6 +65,8 @@ export default class Bullet {
     })
 
     Matter.World.add(world, body)
+
+    this.props.update()
 
     return this
   }
