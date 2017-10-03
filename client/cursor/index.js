@@ -1,4 +1,4 @@
-import throttle from 'lodash/throttle'
+import { throttle, round } from 'lodash'
 import mousePosition from 'mouse-position'
 import store from '../store'
 import { setAngle, shoot } from '../store/actions'
@@ -14,7 +14,7 @@ const handleAngleChange = throttle(() => {
   const player = me.position
   const cursor = [mouse[0], mouse[1]]
 
-  const angle = Math.atan2(cursor[1] - player[1], cursor[0] - player[0])
+  const angle = round(Math.atan2(cursor[1] - player[1], cursor[0] - player[0]), 3)
 
   if (lastAngle === null || lastAngle !== angle) {
     lastAngle = angle

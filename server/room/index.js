@@ -5,26 +5,24 @@ export default class SwordsRoom extends Room {
   constructor (options) {
     super(options)
 
-    this.setPatchRate(50)
+    this.setPatchRate(16)
     this.setState(new Engine())
     this.state.run()
   }
 
   onDispose () {
-    this.state.stop()
+    this.state.pause()
   }
 
   onJoin ({ id }) {
-    this.state.addPlayer({
-      id
-    })
+    this.state.addPlayer(id)
   }
 
-  onLeave (client) {
-    this.state.removePlayer(client)
+  onLeave ({ id }) {
+    this.state.removePlayer(id)
   }
 
-  onMessage (client, data) {
-    this.state.dispatch(client, data)
+  onMessage ({ id }, data) {
+    this.state.dispatch(id, data)
   }
 }

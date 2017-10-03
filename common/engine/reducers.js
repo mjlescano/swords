@@ -7,27 +7,27 @@ import {
 } from '../../common/action-types'
 
 export default {
-  [SET_NAME]: (engine, { id }, [name]) => {
+  [SET_NAME]: (engine, id, [name]) => {
     const player = engine.players.get(id)
     player.props.set('name', name)
   },
 
-  [SET_ANGLE]: (engine, { id }, [angle]) => {
+  [SET_ANGLE]: (engine, id, [angle]) => {
     const player = engine.players.get(id)
     player.props.set('angle', angle)
   },
 
-  [SET_IMPULSE]: (engine, { id }, [x, y]) => {
+  [SET_IMPULSE]: (engine, id, [x, y]) => {
     const player = engine.players.get(id)
     player.props.set('impulse', [x, y])
   },
 
-  [SET_FOCUS]: (engine, { id }, [onFocus]) => {
+  [SET_FOCUS]: (engine, id, [onFocus]) => {
     const player = engine.players.get(id)
     player.props.set('focus', onFocus)
   },
 
-  [SHOOT]: (engine, { id }) => {
-    engine.playerShoot({ id })
+  [SHOOT]: (engine, id) => {
+    engine.playerShoot(id)
   }
 }

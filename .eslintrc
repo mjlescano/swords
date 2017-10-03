@@ -1,6 +1,3 @@
 {
-  "extends": ["democracyos"],
-  "globals": {
-    "p2": true
-  }
+  "extends": ["democracyos"]
 }

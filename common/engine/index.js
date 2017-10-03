@@ -1,10 +1,13 @@
 import loop from 'frame-loop'
-import p2 from 'p2'
+import Matter from 'matter-js'
 import pick from 'lodash/fp/pick'
 import createCollection from '../lib/collection'
+import { actionTypes } from '../action-types'
 import reducers from './reducers'
 import Player from './entities/player'
-import Bullet from './entities/bullet'
+// import Bullet from './entities/bullet'
+
+Matter.Common.isElement = () => false
 
 const toJSON = pick([
   'fps',
@@ -14,62 +17,70 @@ const toJSON = pick([
 
 export default class Engine {
   constructor () {
-    this.onTick = this.onTick.bind(this)
-
-    this.world = new p2.World({
-      gravity: [0, 0]
+    const world = Matter.World.create({
+      label: 'World',
+      gravity: {
+        x: 0,
+        y: 0,
+        scale: 0.001
+      },
+      bounds: {
+        min: { x: -Infinity, y: -Infinity },
+        max: { x: Infinity, y: Infinity }
+      }
     })
 
-    this.engine = loop(this.onTick)
+    const engine = Matter.Engine.create({ world })
 
+    this.engine = engine
     this.fps = 0
     this.players = createCollection(Player)
-    this.bullets = createCollection(Bullet)
+    // this.bullets = createCollection(Bullet)
 
-    this.engine.on('fps', (fps) => { this.fps = fps })
-  }
+    this.loop = loop((delta) => {
+      Matter.Engine.update(engine, delta)
+    })
 
-  dispatch (attrs, [type, ...payload]) {
-    if (reducers[type]) {
-      console.log(` -> Dispatch ${attrs.id} ${type}`, payload)
-      reducers[type](this, attrs, payload)
-    }
+    this.loop.on('fps', (fps) => { this.fps = fps })
   }
 
   run () {
-    this.engine.run()
+    this.loop.run()
   }
 
-  stop () {
-    this.engine.pause()
+  pause () {
+    this.loop.pause()
   }
 
-  onTick (delta) {
-    this.world.step(delta)
+  dispatch (id, [type, ...payload]) {
+    if (!reducers.hasOwnProperty(type)) return
+
+    console.log(` -> Dispatch ${id} ${actionTypes[type]}`, payload)
+
+    reducers[type](this, id, payload)
   }
 
-  addPlayer ({ id, name }) {
+  addPlayer (id) {
     this.players.create(id, {
-      world: this.world,
-      name
+      engine: this.engine
     })
   }
 
-  removePlayer ({ id }) {
+  removePlayer (id) {
     this.players.remove(id)
   }
 
-  playerShoot ({ id }) {
-    const player = this.players.get(id)
-    const bullet = player.shoot()
+  playerShoot (id) {
+    // const player = this.players.get(id)
+    // const bullet = player.shoot()
 
-    if (!bullet) return
+    // if (!bullet) return
 
-    bullet.onRemove(() => {
-      this.bullets.remove(bullet.id, false)
-    })
+    // bullet.onRemove(() => {
+    //   this.bullets.remove(bullet.id, false)
+    // })
 
-    this.bullets.set(bullet.id, bullet)
+    // this.bullets.set(bullet.id, bullet)
   }
 
   toJSON () {

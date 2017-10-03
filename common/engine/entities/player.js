@@ -1,10 +1,11 @@
-import p2 from 'p2'
+import Matter from 'matter-js'
 import { bindAll } from 'lodash'
-import throttle from '../../lib/throttle'
+// import throttle from '../../lib/throttle'
 import createProps from '../../lib/create-props'
-import Bullet from './bullet'
+// import Bullet from './bullet'
 
-export const MOVE_SPEED = 10
+export const MOVE_SPEED = 15
+export const MOVE_FRICTION = 0.4
 export const MOVE_INTERVAL = 40
 export const ROTATE_INTERVAL = 40
 export const SHOOT_INTERVAL = 100
@@ -13,6 +14,8 @@ export const SHAPE = [
   [0, 22],
   [0, 0]
 ]
+
+const shapeVector = SHAPE.map(([x, y]) => ({ x, y }))
 
 const props = {
   name: {
@@ -39,7 +42,7 @@ const props = {
     },
 
     update (entity, angle) {
-      entity.body.angle = angle
+      Matter.Body.setAngle(entity.body, angle)
     },
 
     toJSON (entity) {
@@ -56,14 +59,14 @@ const props = {
     },
 
     update (entity, [x, y]) {
-      entity.body.applyImpulse([
-        MOVE_SPEED * x,
-        MOVE_SPEED * y
-      ])
+      Matter.Body.setVelocity(entity.body, {
+        x: MOVE_SPEED * x,
+        y: MOVE_SPEED * y
+      })
     },
 
     toJSON (entity) {
-      const [x, y] = entity.body.position
+      const { x, y } = entity.body.position
       return { position: [x, y] }
     }
   }
@@ -72,7 +75,7 @@ const props = {
 export default class Player {
   constructor (options = {}) {
     const {
-      world = new p2.World(),
+      engine = null,
       name = 'Unknown',
       angle = Math.PI,
       position = [0, 0]
@@ -83,18 +86,18 @@ export default class Player {
       position
     }
 
-    this.world = world
+    this.engine = engine
     this.props = createProps(this, props)
     this.toJSON = this.props.toJSON
 
-    this.shoot = throttle(function () {
-      return new Bullet({ player: this })
-    }, SHOOT_INTERVAL)
+    // this.shoot = throttle(function () {
+    //   return new Bullet({ player: this })
+    // }, SHOOT_INTERVAL)
 
     this.props.set({ name, focus: true })
     this.render()
 
-    this.world.on('postStep', () => {
+    Matter.Events.on(engine, 'afterUpdate', () => {
       this.props.update()
     })
 
@@ -105,24 +108,19 @@ export default class Player {
   }
 
   render () {
-    this.body = new p2.Body({
-      type: p2.Body.DYNAMIC,
-      mass: 2,
-      position: this.options.position,
-      angle: this.options.angle
+    const [x, y] = this.options.position
+    const { world } = this.engine
+
+    const body = this.body = Matter.Bodies.fromVertices(x, y, shapeVector, {
+      frictionAir: MOVE_FRICTION
     })
 
-    this.shape = new p2.Convex({
-      vertices: SHAPE
-    })
-
-    this.body.addShape(this.shape)
-    this.world.addBody(this.body)
+    Matter.World.add(world, body)
 
     return this
   }
 
   remove () {
-    this.world.removeBody(this.body)
+    Matter.World.remove(this.engine.world, this.body)
   }
 }
