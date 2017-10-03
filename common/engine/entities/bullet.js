@@ -25,7 +25,7 @@ export default class Bullet {
     this.player = player
     this.onRemoveCallbacks = []
 
-    this.props = createProps(props)
+    this.props = createProps(this, props)
     this.toJSON = this.props.toJSON
 
     this.render()

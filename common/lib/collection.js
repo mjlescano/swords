@@ -2,7 +2,8 @@ export default function createCollection (Entity) {
   const entities = new Map()
 
   return {
-    create (id = '', opts) {
+    create (id, opts) {
+      if (!id) throw new Error('Collection entities must have an id')
       const entity = new Entity(opts)
       entities.set(id, entity)
       return entity

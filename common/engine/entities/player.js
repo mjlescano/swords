@@ -84,7 +84,7 @@ export default class Player {
     }
 
     this.world = world
-    this.props = createProps(props)
+    this.props = createProps(this, props)
     this.toJSON = this.props.toJSON
 
     this.shoot = throttle(function () {

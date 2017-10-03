@@ -31,7 +31,7 @@ export default class Engine {
 
   dispatch (attrs, [type, ...payload]) {
     if (reducers[type]) {
-      console.log(` -> Dispatch ${type}`, payload)
+      console.log(` -> Dispatch ${attrs.id} ${type}`, payload)
       reducers[type](this, attrs, payload)
     }
   }
@@ -64,8 +64,6 @@ export default class Engine {
     const bullet = player.shoot()
 
     if (!bullet) return
-
-    console.log(' -> shot', player.toJSON('name').name)
 
     bullet.onRemove(() => {
       this.bullets.remove(bullet.id, false)
