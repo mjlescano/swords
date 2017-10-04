@@ -1,17 +1,17 @@
-import Matter from 'matter-js'
 import { bindAll } from 'lodash'
+import Matter from '../../lib/matter-js'
 import createProps from '../../lib/create-props'
 
-export const BULLET_SPEED = 12
-export const BULLET_LIFESPAN = 1000
+export const BULLET_SPEED = 25
+export const MOVE_FRICTION = 0.05
 export const SHAPE = 2
 
 const props = {
   position: {
     validate: () => false,
 
-    toJSON (entity) {
-      const { x, y } = entity.body.position
+    toJSON ({ body }) {
+      const { x, y } = body.position
       return { position: [x, y] }
     }
   }
@@ -28,14 +28,6 @@ export default class Bullet {
     this.toJSON = this.props.toJSON
 
     this.render()
-
-    Matter.Events.on(game.engine, 'afterUpdate', () => {
-      this.props.update()
-    })
-
-    setTimeout(() => {
-      this.remove()
-    }, BULLET_LIFESPAN)
 
     bindAll(this, [
       'render',
@@ -57,7 +49,9 @@ export default class Bullet {
     const x = playerRadius * cos + position[0]
     const y = playerRadius * sin + position[1]
 
-    const body = this.body = Matter.Bodies.circle(x, y, SHAPE)
+    const body = this.body = Matter.Bodies.circle(x, y, SHAPE, {
+      frictionAir: MOVE_FRICTION
+    })
 
     Matter.Body.setVelocity(body, {
       x: BULLET_SPEED * cos + player.body.velocity.x * Math.abs(cos) / 2,
@@ -65,6 +59,11 @@ export default class Bullet {
     })
 
     Matter.World.add(world, body)
+
+    Matter.Events.on(this.game.engine, 'afterUpdate', () => {
+      this.props.update()
+      if (body.speed < 0.8) this.remove()
+    })
 
     this.props.update()
 

@@ -1,5 +1,5 @@
-import { forEach, mapValues } from 'lodash'
-import throttle from './throttle'
+import { forEach, mapValues, throttle } from 'lodash'
+// import throttle from './throttle'
 
 export default (entity, initialProps = {}) => {
   const properties = createProps(entity, initialProps)
@@ -71,6 +71,7 @@ const createProps = (entity, props) => {
 
     return {
       set: throttle((newValue) => {
+        console.log(` => setProp ${key}`, newValue)
         value = newValue
       }, interval),
 

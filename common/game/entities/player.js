@@ -1,18 +1,18 @@
-import Matter from 'matter-js'
 import { bindAll } from 'lodash'
+import Matter from '../../lib/matter-js'
 import throttle from '../../lib/throttle'
 import createProps from '../../lib/create-props'
 import Bullet from './bullet'
 
-export const MOVE_SPEED = 15
+export const MOVE_SPEED = 16
 export const MOVE_FRICTION = 0.4
-export const MOVE_INTERVAL = 40
-export const ROTATE_INTERVAL = 40
-export const SHOOT_INTERVAL = 50
-export const MAX_BULLETS = 3
+export const MOVE_INTERVAL = 50
+export const SET_ANGLE_INTERVAL = 50
+export const SHOOT_INTERVAL = 100
+export const MAX_BULLETS = 4
 export const SHAPE = [
-  [22, 10],
-  [0, 22],
+  [30, 14],
+  [0, 30],
   [0, 0]
 ]
 
@@ -32,13 +32,11 @@ const props = {
   },
 
   focus: {
-    validate (entity, val) {
-      return typeof val !== 'boolean'
-    }
+    validate: (entity, val) => typeof val === 'boolean'
   },
 
   angle: {
-    interval: ROTATE_INTERVAL,
+    interval: SET_ANGLE_INTERVAL,
 
     validate (entity, val) {
       if (typeof val !== 'number') return false
@@ -46,12 +44,13 @@ const props = {
       return true
     },
 
-    update (entity, angle) {
-      Matter.Body.setAngle(entity.body, angle)
+    update ({ body }, angle) {
+      Matter.Body.setAngle(body, angle)
     },
 
-    toJSON (entity) {
-      return { angle: entity.body.angle }
+    toJSON ({ body }) {
+      const { angle } = body
+      return { angle }
     }
   },
 
@@ -60,18 +59,19 @@ const props = {
 
     validate (entity, val) {
       if (!Array.isArray(val)) return false
+      if (val.length !== 2) return false
       return val.every((v) => v === -1 || v === 0 || v === 1)
     },
 
-    update (entity, [x, y]) {
-      Matter.Body.setVelocity(entity.body, {
+    update ({ body }, [x, y]) {
+      Matter.Body.setVelocity(body, {
         x: MOVE_SPEED * x,
         y: MOVE_SPEED * y
       })
     },
 
-    toJSON (entity) {
-      const { x, y } = entity.body.position
+    toJSON ({ body }) {
+      const { x, y } = body.position
       return { position: [x, y] }
     }
   }
@@ -109,10 +109,6 @@ export default class Player {
     this.props.set({ name, color, focus: true })
     this.render()
 
-    Matter.Events.on(game.engine, 'afterUpdate', () => {
-      this.props.update()
-    })
-
     bindAll(this, [
       'render',
       'remove'
@@ -128,6 +124,10 @@ export default class Player {
     })
 
     Matter.World.add(world, body)
+
+    Matter.Events.on(this.game.engine, 'afterUpdate', () => {
+      this.props.update()
+    })
 
     this.props.update()
 

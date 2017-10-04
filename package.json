@@ -24,6 +24,7 @@
     "mouse-position": "~2.0.1",
     "mousetrap": "~1.6.1",
     "observ-focus": "~1.0.0",
+    "poly-decomp": "~0.2.1",
     "redux": "~3.7.2",
     "throttle": "~1.0.3",
     "watchify": "~3.9.0"

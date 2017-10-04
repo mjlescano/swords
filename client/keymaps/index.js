@@ -1,5 +1,6 @@
 import throttle from 'lodash/throttle'
 import Mousetrap from 'mousetrap'
+import { MOVE_INTERVAL } from '../../common/game/entities/player'
 import store from '../store'
 import { setImpulse } from '../store/actions'
 
@@ -17,10 +18,7 @@ const handleArrows = throttle(() => {
   const y = (up ? -1 : 0) + (down ? 1 : 0)
   store.dispatch(setImpulse(x, y))
   if (arrows.count > 0) handleArrows()
-}, 15, {
-  leading: true,
-  trailing: true
-})
+}, MOVE_INTERVAL + 5)
 
 const handleArrow = (direction, pressed) => {
   return () => {

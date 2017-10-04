@@ -1,5 +1,6 @@
 import { throttle, round } from 'lodash'
 import mousePosition from 'mouse-position'
+import { SET_ANGLE_INTERVAL, SHOOT_INTERVAL } from '../../common/game/entities/player'
 import store from '../store'
 import { setAngle, shoot } from '../store/actions'
 
@@ -20,13 +21,13 @@ const handleAngleChange = throttle(() => {
     lastAngle = angle
     store.dispatch(setAngle(angle))
   }
-}, 25)
+}, SET_ANGLE_INTERVAL + 5)
 
 mouse.once('move', () => {
   mouse.on('move', handleAngleChange)
   store.subscribe(handleAngleChange)
 })
 
-const handleShoot = throttle(() => store.dispatch(shoot()), 75)
+const handleShoot = throttle(() => store.dispatch(shoot()), SHOOT_INTERVAL)
 
 window.addEventListener('click', handleShoot, false)

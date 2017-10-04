@@ -1,6 +1,6 @@
 import loop from 'frame-loop'
-import Matter from 'matter-js'
 import pick from 'lodash/fp/pick'
+import Matter from '../lib/matter-js'
 import createCollection from '../lib/collection'
 import generateIds from '../lib/generate-ids'
 import generateColors from '../lib/generate-colors'
@@ -8,8 +8,6 @@ import { actionTypes } from '../action-types'
 import reducers from './reducers'
 import Player from './entities/player'
 import Bullet from './entities/bullet'
-
-Matter.Common.isElement = () => false
 
 const toJSON = pick([
   'fps',
@@ -47,6 +45,12 @@ export default class Game {
     })
 
     this.loop.on('fps', (fps) => { this.fps = fps })
+
+    // Matter.Events.on(engine, 'collisionEnd', function (evt) {
+    //   evt.pairs.forEach((pair) => {
+    //     console.log(pair.collision)
+    //   })
+    // })
   }
 
   run () {
@@ -59,6 +63,7 @@ export default class Game {
 
   dispatch (id, [type, ...payload]) {
     if (!reducers.hasOwnProperty(type)) return
+    if (!Array.isArray(payload)) return
 
     console.log(` -> Dispatch ${id} ${actionTypes[type]}`, payload)
 

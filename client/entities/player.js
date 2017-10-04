@@ -1,12 +1,7 @@
+import { SHAPE } from '../../common/game/entities/player'
 import { shapeToAnchor } from '../lib/two'
 import { Entity } from '../lib/entity'
 import withWorld from '../world/with-world'
-
-const SHAPE = [
-  [22, 10],
-  [0, 22],
-  [0, 0]
-]
 
 const shape = shapeToAnchor(SHAPE)
 
