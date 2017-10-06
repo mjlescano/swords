@@ -25,8 +25,8 @@ export default class Game {
         scale: 0.001
       },
       bounds: {
-        min: { x: -Infinity, y: -Infinity },
-        max: { x: Infinity, y: Infinity }
+        min: { x: -750, y: -750 },
+        max: { x: 750, y: 750 }
       }
     })
 
@@ -65,7 +65,7 @@ export default class Game {
         const shooter = bullet.player
 
         bullet.remove()
-        shooter.addKill()
+        // shooter.addKill()
       })
     })
   }

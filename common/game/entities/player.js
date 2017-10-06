@@ -106,14 +106,14 @@ export default class Player {
       return bullet
     }, SHOOT_INTERVAL)
 
-    this.props.set({ name, color, focus: true })
-    this.render()
-
     bindAll(this, [
       'render',
       'remove',
-      'onGameUpdate'
+      'handleGameUpdate'
     ])
+
+    this.props.set({ name, color, focus: true })
+    this.render()
   }
 
   render () {
@@ -128,20 +128,20 @@ export default class Player {
 
     Matter.World.add(world, body)
 
-    Matter.Events.on(this.game.engine, 'afterUpdate', this.onGameUpdate)
+    Matter.Events.on(this.game.engine, 'afterUpdate', this.handleGameUpdate)
 
     this.props.update()
 
     return this
   }
 
-  onGameUpdate () {
+  handleGameUpdate () {
     this.props.update()
   }
 
   remove () {
     Matter.World.remove(this.game.world, this.body)
-    Matter.Events.off(this.game.engine, 'afterUpdate', this.onGameUpdate)
+    Matter.Events.off(this.game.engine, 'afterUpdate', this.handleGameUpdate)
   }
 }
 

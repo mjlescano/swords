@@ -28,14 +28,14 @@ export default class Bullet {
     this.props = createProps(this, props)
     this.toJSON = this.props.toJSON
 
-    this.render()
-
     bindAll(this, [
       'render',
       'remove',
       'onRemove',
-      'onGameUpdate'
+      'handleGameUpdate'
     ])
+
+    this.render()
   }
 
   render () {
@@ -64,7 +64,7 @@ export default class Bullet {
 
     Matter.World.add(world, body)
 
-    Matter.Events.on(this.game.engine, 'afterUpdate', this.onGameUpdate)
+    Matter.Events.on(this.game.engine, 'afterUpdate', this.handleGameUpdate)
 
     this.props.update()
 
@@ -73,13 +73,13 @@ export default class Bullet {
 
   remove () {
     Matter.World.remove(this.game.world, this.body)
-    Matter.Events.off(this.game.engine, 'afterUpdate', this.onGameUpdate)
+    Matter.Events.off(this.game.engine, 'afterUpdate', this.handleGameUpdate)
 
     this.onRemoveCallbacks.forEach((cb) => cb())
     this.onRemoveCallbacks = []
   }
 
-  onGameUpdate () {
+  handleGameUpdate () {
     this.props.update()
     if (this.body.speed < BULLET_DISSOLVE_SPEED) this.remove()
   }
