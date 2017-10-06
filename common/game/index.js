@@ -46,11 +46,28 @@ export default class Game {
 
     this.loop.on('fps', (fps) => { this.fps = fps })
 
-    // Matter.Events.on(engine, 'collisionEnd', function (evt) {
-    //   evt.pairs.forEach((pair) => {
-    //     console.log(pair.collision)
-    //   })
-    // })
+    Matter.Events.on(engine, 'collisionEnd', function (evt) {
+      evt.pairs.forEach((pair) => {
+        const { bodyA, bodyB } = pair.collision
+
+        const victim = Player.is(bodyA)
+          ? bodyA.entity : Player.is(bodyB)
+          ? bodyB.entity : null
+
+        if (!victim) return
+
+        const bullet = Bullet.is(bodyA)
+          ? bodyA.entity : Bullet.is(bodyB)
+          ? bodyB.entity : null
+
+        if (!bullet) return
+
+        const shooter = bullet.player
+
+        bullet.remove()
+        shooter.addKill()
+      })
+    })
   }
 
   run () {
@@ -67,7 +84,7 @@ export default class Game {
 
     console.log(` -> Dispatch ${id} ${actionTypes[type]}`, payload)
 
-    reducers[type](this, id, payload)
+    reducers[type](this, id, ...payload)
   }
 
   addPlayer (id) {

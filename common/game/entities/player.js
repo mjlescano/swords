@@ -111,7 +111,8 @@ export default class Player {
 
     bindAll(this, [
       'render',
-      'remove'
+      'remove',
+      'onGameUpdate'
     ])
   }
 
@@ -123,18 +124,28 @@ export default class Player {
       frictionAir: MOVE_FRICTION
     })
 
+    body.entity = this
+
     Matter.World.add(world, body)
 
-    Matter.Events.on(this.game.engine, 'afterUpdate', () => {
-      this.props.update()
-    })
+    Matter.Events.on(this.game.engine, 'afterUpdate', this.onGameUpdate)
 
     this.props.update()
 
     return this
   }
 
+  onGameUpdate () {
+    this.props.update()
+  }
+
   remove () {
     Matter.World.remove(this.game.world, this.body)
+    Matter.Events.off(this.game.engine, 'afterUpdate', this.onGameUpdate)
   }
+}
+
+Player.is = (body) => {
+  if (!body) return false
+  return body.entity instanceof Player
 }

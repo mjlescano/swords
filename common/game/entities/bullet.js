@@ -3,6 +3,7 @@ import Matter from '../../lib/matter-js'
 import createProps from '../../lib/create-props'
 
 export const BULLET_SPEED = 25
+export const BULLET_DISSOLVE_SPEED = 0.8
 export const MOVE_FRICTION = 0.05
 export const SHAPE = 2
 
@@ -32,7 +33,8 @@ export default class Bullet {
     bindAll(this, [
       'render',
       'remove',
-      'onRemove'
+      'onRemove',
+      'onGameUpdate'
     ])
   }
 
@@ -53,6 +55,8 @@ export default class Bullet {
       frictionAir: MOVE_FRICTION
     })
 
+    body.entity = this
+
     Matter.Body.setVelocity(body, {
       x: BULLET_SPEED * cos + player.body.velocity.x * Math.abs(cos) / 2,
       y: BULLET_SPEED * sin + player.body.velocity.y * Math.abs(sin) / 2
@@ -60,10 +64,7 @@ export default class Bullet {
 
     Matter.World.add(world, body)
 
-    Matter.Events.on(this.game.engine, 'afterUpdate', () => {
-      this.props.update()
-      if (body.speed < 0.8) this.remove()
-    })
+    Matter.Events.on(this.game.engine, 'afterUpdate', this.onGameUpdate)
 
     this.props.update()
 
@@ -72,11 +73,23 @@ export default class Bullet {
 
   remove () {
     Matter.World.remove(this.game.world, this.body)
+    Matter.Events.off(this.game.engine, 'afterUpdate', this.onGameUpdate)
+
     this.onRemoveCallbacks.forEach((cb) => cb())
     this.onRemoveCallbacks = []
+  }
+
+  onGameUpdate () {
+    this.props.update()
+    if (this.body.speed < BULLET_DISSOLVE_SPEED) this.remove()
   }
 
   onRemove (cb) {
     this.onRemoveCallbacks.push(cb)
   }
+}
+
+Bullet.is = (body) => {
+  if (!body) return false
+  return body.entity instanceof Bullet
 }
