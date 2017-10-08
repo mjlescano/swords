@@ -22,13 +22,9 @@ const valuesToDebug = {
 const stateValues = Object.values(valuesToDebug)
 
 class Debug extends Entity {
-  init () {
-    this.parent = document.body
-  }
-
   render () {
     const el = this.el = d(`.fps[style="${style}"] ${this.getText()}`)
-    this.parent.appendChild(el)
+    document.body.appendChild(el)
   }
 
   getText () {
@@ -40,7 +36,7 @@ class Debug extends Entity {
   }
 
   remove () {
-    this.parent.removeChild(this.el)
+    document.body.removeChild(this.el)
   }
 }
 

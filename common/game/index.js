@@ -25,8 +25,8 @@ export default class Game {
         scale: 0.001
       },
       bounds: {
-        min: { x: -750, y: -750 },
-        max: { x: 750, y: 750 }
+        min: { x: -1000, y: -1000 },
+        max: { x: 1000, y: 1000 }
       }
     })
 
@@ -65,7 +65,8 @@ export default class Game {
         const shooter = bullet.player
 
         bullet.remove()
-        // shooter.addKill()
+        shooter.props.set('kills', 1)
+        victim.props.set('deads', 1)
       })
     })
   }
@@ -88,9 +89,12 @@ export default class Game {
   }
 
   addPlayer (id) {
+    const [name, color] = this.generateColor()
+
     this.players.create(id, {
       game: this,
-      color: this.generateColor()
+      name,
+      color
     })
   }
 

@@ -8,11 +8,11 @@ export const MOVE_SPEED = 16
 export const MOVE_FRICTION = 0.4
 export const MOVE_INTERVAL = 50
 export const SET_ANGLE_INTERVAL = 50
-export const SHOOT_INTERVAL = 100
-export const MAX_BULLETS = 4
+export const SHOOT_INTERVAL = 500
+export const MAX_BULLETS = 3
 export const SHAPE = [
-  [30, 14],
-  [0, 30],
+  [35, 16],
+  [0, 35],
   [0, 0]
 ]
 
@@ -33,6 +33,30 @@ const props = {
 
   focus: {
     validate: (entity, val) => typeof val === 'boolean'
+  },
+
+  kills: {
+    interval: 0,
+
+    validate: (entity, val) => val === 1,
+
+    update (entity, angle) {
+      entity.killsCount++
+    },
+
+    toJSON: (entity, angle) => ({ kills: entity.killsCount })
+  },
+
+  deads: {
+    interval: 0,
+
+    validate: (entity, val) => val === 1,
+
+    update (entity, angle) {
+      entity.deadsCount++
+    },
+
+    toJSON: (entity, angle) => ({ deads: entity.deadsCount })
   },
 
   angle: {
@@ -89,9 +113,11 @@ export default class Player {
 
     this.options = {
       angle,
-      position,
-      color
+      position
     }
+
+    this.killsCount = 0
+    this.deadsCount = 0
 
     this.game = game
     this.props = createProps(this, props)

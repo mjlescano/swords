@@ -5,7 +5,7 @@ import createProps from '../../lib/create-props'
 export const BULLET_SPEED = 25
 export const BULLET_DISSOLVE_SPEED = 0.8
 export const MOVE_FRICTION = 0.05
-export const SHAPE = 2
+export const SHAPE = 3
 
 const props = {
   position: {

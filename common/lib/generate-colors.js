@@ -1,8 +1,8 @@
 export const COLORS = [
-  '#d7454c',
-  '#4ab4e5',
-  '#4CdbA5',
-  '#e7be31'
+  ['red', '#d7454c'],
+  ['blue', '#4ab4e5'],
+  ['green', '#4CdbA5'],
+  ['yellow', '#e7be31']
 ]
 
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)

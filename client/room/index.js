@@ -1,7 +1,6 @@
 import Colyseus from 'colyseus.js'
 import focus from 'observ-focus'
 import {
-  setName,
   setCurrentPlayer,
   updateRoom,
   setFocus,
@@ -16,7 +15,6 @@ const client = new Colyseus.Client(`${protocol}://${host}`)
 const room = client.join('default')
 
 room.onJoin.addOnce(() => {
-  store.dispatch(setName('tout.'))
   store.dispatch(setCurrentPlayer(client.id))
 })
 
