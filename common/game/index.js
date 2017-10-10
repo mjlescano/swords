@@ -5,9 +5,10 @@ import createCollection from '../lib/collection'
 import generateIds from '../lib/generate-ids'
 import generateColors from '../lib/generate-colors'
 import { actionTypes } from '../action-types'
-import reducers from './reducers'
 import Player from './entities/player'
 import Bullet from './entities/bullet'
+import reducers from './reducers'
+import createWorld from './world'
 
 const toJSON = pick([
   'fps',
@@ -17,20 +18,10 @@ const toJSON = pick([
 
 export default class Game {
   constructor () {
-    const world = Matter.World.create({
-      label: 'World',
-      gravity: {
-        x: 0,
-        y: 0,
-        scale: 0.001
-      },
-      bounds: {
-        min: { x: -1000, y: -1000 },
-        max: { x: 1000, y: 1000 }
-      }
-    })
-
+    const world = createWorld()
     const engine = Matter.Engine.create({ world })
+
+    world.bodies.forEach(({ vertices, position }) => console.log({ vertices, position }))
 
     this.engine = engine
     this.world = world

@@ -1,4 +1,4 @@
-import { bindAll } from 'lodash'
+import { round, bindAll } from 'lodash'
 import Matter from '../../lib/matter-js'
 import throttle from '../../lib/throttle'
 import createProps from '../../lib/create-props'
@@ -74,7 +74,7 @@ const props = {
 
     toJSON ({ body }) {
       const { angle } = body
-      return { angle }
+      return { angle: round(angle, 2) }
     }
   },
 
@@ -96,7 +96,7 @@ const props = {
 
     toJSON ({ body }) {
       const { x, y } = body.position
-      return { position: [x, y] }
+      return { position: [round(x), round(y)] }
     }
   }
 }

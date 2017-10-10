@@ -3,8 +3,8 @@ import './keymaps'
 import './cursor'
 import Debug from './entities/debug'
 import Score from './entities/score'
-import Players from './containers/players'
-import Bullets from './containers/bullets'
+import Players from './entities/player'
+import Bullets from './entities/bullet'
 
 const entities = {
   debug: new Debug(),

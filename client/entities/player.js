@@ -1,6 +1,7 @@
 import { SHAPE } from '../../common/game/entities/player'
 import { shapeToAnchor } from '../lib/two'
-import { Entity } from '../lib/entity'
+import { Entity, EntityGroup } from '../lib/entity'
+import withStore from '../store/with-store'
 import withWorld from '../world/with-world'
 
 const shape = shapeToAnchor(SHAPE)
@@ -33,4 +34,11 @@ class Player extends Entity {
   }
 }
 
-export default withWorld(Player)
+class Players extends EntityGroup {
+  init (...args) {
+    super.init(...args)
+    this.Child = withWorld(Player)
+  }
+}
+
+export default withStore(Players, (state) => state.room.players)

@@ -3,16 +3,32 @@ import css from '../lib/css'
 import { Entity } from '../lib/entity'
 import withStore from '../store/with-store'
 
-const style = css({
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  padding: '5px',
-  fontFamily: 'monospace',
-  fontSize: '11px',
-  textAlign: 'right',
-  userSelect: 'none'
-})
+const styles = {
+  score: css({
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    padding: '5px',
+    fontFamily: 'monospace',
+    fontSize: '11px',
+    userSelect: 'none',
+    textAlign: 'center'
+  }),
+
+  name: css({
+    display: 'inline-block',
+    padding: '0 2px',
+    width: '50px',
+    textAlign: 'right'
+  }),
+
+  points: css({
+    display: 'inline-block',
+    padding: '0 2px',
+    width: '50px',
+    textAlign: 'left'
+  })
+}
 
 function removeChildren (el) {
   while (el.firstChild) el.removeChild(el.firstChild)
@@ -21,7 +37,7 @@ function removeChildren (el) {
 
 class Score extends Entity {
   render () {
-    this.el = d('.score', { style })
+    this.el = d(`.score[style="${styles.score}"]`)
     document.body.appendChild(this.el)
   }
 
@@ -29,7 +45,12 @@ class Score extends Entity {
     removeChildren(this.el)
 
     d(this.el, this.state.map(({ name, kills, deads }) => {
-      return [`span ${name} ${kills}/${deads}`, 'br']
+      return [
+        'div', [
+          `span[style="${styles.name}"] ${name}`,
+          `span[style="${styles.points}"] ${kills}/${deads}`
+        ]
+      ]
     }))
   }
 
@@ -46,5 +67,7 @@ function byKillsAndDeads (playerA, playerB) {
 }
 
 export default withStore(Score, (state) => {
-  return Object.values(state.room.players).sort(byKillsAndDeads)
+  return Object.values(state.room.players)
+    .map(({ name, kills, deads }) => ({ name, kills, deads }))
+    .sort(byKillsAndDeads)
 })

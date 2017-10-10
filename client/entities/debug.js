@@ -16,7 +16,9 @@ const style = css({
 
 const valuesToDebug = {
   currentPlayer: 'id',
-  'room.fps': 'fps'
+  'me.name': 'name',
+  'me.angle': 'angle',
+  'me.position': 'position'
 }
 
 const stateValues = Object.values(valuesToDebug)

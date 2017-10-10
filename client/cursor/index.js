@@ -15,7 +15,7 @@ const handleAngleChange = throttle(() => {
   const player = me.position
   const cursor = [mouse[0], mouse[1]]
 
-  const angle = round(Math.atan2(cursor[1] - player[1], cursor[0] - player[0]), 3)
+  const angle = round(Math.atan2(cursor[1] - player[1], cursor[0] - player[0]), 2)
 
   if (lastAngle === null || lastAngle !== angle) {
     lastAngle = angle

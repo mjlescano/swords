@@ -1,5 +1,6 @@
 import { SHAPE } from '../../common/game/entities/bullet'
-import { Entity } from '../lib/entity'
+import { Entity, EntityGroup } from '../lib/entity'
+import withStore from '../store/with-store'
 import withWorld from '../world/with-world'
 
 class Bullet extends Entity {
@@ -23,4 +24,11 @@ class Bullet extends Entity {
   }
 }
 
-export default withWorld(Bullet)
+class Bullets extends EntityGroup {
+  init (...args) {
+    super.init(...args)
+    this.Child = withWorld(Bullet)
+  }
+}
+
+export default withStore(Bullets, (state) => state.room.bullets)
