@@ -1,7 +1,7 @@
 import Matter from '../lib/matter-js'
 
-export const WIDTH = 400
-export const HEIGHT = 400
+export const WIDTH = 600
+export const HEIGHT = 600
 
 const createWalls = () => {
   const opts = { isStatic: true }
@@ -9,10 +9,10 @@ const createWalls = () => {
   const y = HEIGHT / 2
 
   return [
-    Matter.Bodies.rectangle(-x, -y, 1, HEIGHT, opts),
-    Matter.Bodies.rectangle(-x, -y, WIDTH, 1, opts),
-    Matter.Bodies.rectangle(x, -y, 1, HEIGHT, opts),
-    Matter.Bodies.rectangle(-x, y, WIDTH, 1, opts)
+    Matter.Bodies.rectangle(0, -y, WIDTH + 20, 2, opts),
+    Matter.Bodies.rectangle(x, 0, 2, HEIGHT + 20, opts),
+    Matter.Bodies.rectangle(0, y, WIDTH + 20, 2, opts),
+    Matter.Bodies.rectangle(-x, 0, 2, HEIGHT + 20, opts)
   ]
 }
 

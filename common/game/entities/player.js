@@ -9,7 +9,7 @@ export const MOVE_FRICTION = 0.4
 export const MOVE_INTERVAL = 50
 export const SET_ANGLE_INTERVAL = 50
 export const SHOOT_INTERVAL = 500
-export const MAX_BULLETS = 3
+export const MAX_BULLETS = Infinity // 3
 export const SHAPE = [
   [35, 16],
   [0, 35],

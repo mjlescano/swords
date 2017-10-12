@@ -7,15 +7,22 @@ import { setAngle, shoot } from '../store/actions'
 const mouse = mousePosition()
 let lastAngle = null
 
+const screen = {
+  x: window.innerWidth,
+  y: window.innerHeight
+}
+
 const handleAngleChange = throttle(() => {
   const { me } = store.getState()
 
   if (!me) return
 
-  const player = me.position
-  const cursor = [mouse[0], mouse[1]]
+  const player = {
+    x: me.position[0] + (screen.x / 2),
+    y: me.position[0] + (screen.y / 2)
+  }
 
-  const angle = round(Math.atan2(cursor[1] - player[1], cursor[0] - player[0]), 2)
+  const angle = round(Math.atan2(mouse[1] - player.y, mouse[0] - player.x), 2)
 
   if (lastAngle === null || lastAngle !== angle) {
     lastAngle = angle
